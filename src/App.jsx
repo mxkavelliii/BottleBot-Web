@@ -3,6 +3,7 @@ import Home from "./Pages/Home";
 import { Route, Routes } from "react-router-dom";
 // ? FOR TESTING PURPOSES ONLY
 import SampleAdminRewardsCrud from "./samples/SampleAdminRewardsCrud";
+import Monitor from "./samples/Monitor";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         path="/samples/rewards/admin"
         element={<SampleAdminRewardsCrud />}
       />
+      <Route path="/samples/monitor/admin" element={<Monitor />} />
     </Routes>
   );
 }
