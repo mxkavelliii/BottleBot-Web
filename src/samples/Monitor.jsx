@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 
 function Monitor() {
   const URL = "http://localhost:8080/api";
+
   const WEBSOCKET_URL = "ws://localhost:8080";
-  const [data, setData] = useState(null);
+  const [wsConnectionData, setWsConnectionData] = useState(null);
+  const [data1, setData1] = useState(null);
+  const [data2, setData2] = useState(null);
   const [counter, setCounter] = useState(0);
   const [error, setError] = useState(null);
 
@@ -43,7 +46,19 @@ function Monitor() {
     socket.addEventListener("message", (event) => {
       const receivedData = JSON.parse(event.data); // Parse the incoming JSON data
       console.log("New data received:", receivedData);
-      setData(receivedData); // Update the state with the new data
+
+      // * to differentiate real-time updates
+      switch (receivedData.realTimeType) {
+        case "ws connection":
+          setWsConnectionData(receivedData);
+          break;
+        case "botstate":
+          setData1(receivedData); 
+          break;
+        case "queue":
+          setData2(receivedData);
+          break;
+      }
     });
 
     // Event listener for errors
@@ -67,10 +82,23 @@ function Monitor() {
     <div className="text-2xl font-bold">
       <h1>WebSocket Data</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {data ? (
-        <p className="text-wrap">{JSON.stringify(data, null, 2)}</p>
+
+      {wsConnectionData ? (
+        <p className="text-wrap">{JSON.stringify(wsConnectionData, null, 2)}</p>
       ) : (
-        <p>No data received yet.</p>
+        <p>No data received here yet.</p>
+      )}
+
+      {data1 ? (
+        <p className="text-wrap">{JSON.stringify(data1, null, 2)}</p>
+      ) : (
+        <p>No data received here yet.</p>
+      )}
+
+      {data2 ? (
+        <p className="text-wrap">{JSON.stringify(data2, null, 2)}</p>
+      ) : (
+        <p>No data received here yet.</p>
       )}
     </div>
   );
