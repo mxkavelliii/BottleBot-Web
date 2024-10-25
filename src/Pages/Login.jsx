@@ -24,6 +24,7 @@ const Login = () => {
         email: email,
         password: password,
       });
+
       if (response.data.success === true) {
         navigate("/admin/dashboard");
         setIsAuthenticated(true);
@@ -116,6 +117,7 @@ const Login = () => {
         />
       )}
     </>
+
   );
 };
 
