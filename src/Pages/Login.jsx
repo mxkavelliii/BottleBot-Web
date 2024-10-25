@@ -1,26 +1,20 @@
 import { React, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { HiExclamation } from "react-icons/hi";
+import Logo from "../assets/Bottle_Bot.png";
+import PopupModal from "../Components/PopupModal";
+import { useAuth } from "../context/AuthProvider";
 
 //icons
-import { RiUser4Line, RiKeyLine } from "react-icons/ri";
-import { IoShieldHalf } from "react-icons/io5";
-import { BsCheck } from "react-icons/bs";
+import { FiMail, FiLock } from "react-icons/fi";
 
 const Login = () => {
-  const [users, setUsers] = useState([]);
-  const [rmbr, setRmbr] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [toastVisible, setToastVisible] = useState(false);
+  const [popupModal, setPopupModal] = useState(false);
   const [message, setMessage] = useState("");
-
-  const toggleRmbr = () => {
-    setRmbr(!rmbr);
-    console.log(rmbr);
-  };
-  console.log(email, password);
+  const { setIsAuthenticated, setToken, setUser } = useAuth();
+  const navigate = useNavigate();
 
   const onLogin = async () => {
     try {
@@ -30,112 +24,100 @@ const Login = () => {
         email: email,
         password: password,
       });
-      if (response) {
-        console.log(response.data);
-        if (response.data.message !== "Login success!") {
-          setMessage(response.data.message);
-          setToastVisible(true);
-          setTimeout(() => {
-            setToastVisible(false);
-          }, 2000);
-        }
+
+      if (response.data.success === true) {
+        navigate("/admin/dashboard");
+        setIsAuthenticated(true);
+        setToken(response.data.token);
+        setUser(response.data.user);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("token", response.data.token);
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      setPopupModal(true);
+      setIsAuthenticated(true);
+      setMessage(error.response.data.message || "An Error Occurred");
     }
   };
 
   return (
-    <div className="h-[100svh] w-full flex items-center justify-center bg-login bg-cover bg-center font-inter">
-      <div className="w-full relative h-full flex items-center justify-center bg-gradient-to-tr from-black/90 via-gray-400/60 to-black/40">
-        <div className="flex flex-col items-center justify-center bg-[#fdfdff] py-3 px-6 bg- border-[#222326] rounded-xl shadow-xl">
-          <div className="flex flex-col items-center justify-center w-full py-4">
-            <p className="text-sm font-bold">Welcome Back</p>
-            <p className="text-xs font-semibold text-black/50">
-              Please enter your details to login.
-            </p>
+    <>
+      <div
+        className="w-full h-[100svh] flex items-center justify-center font-dm"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right top, #553657, #8f4164, #c5525c, #e87443, #e7872f, #df9c19, #bdac00, #aaa600, #989f00, #d0b100)",
+          backgroundSize: "cover",
+        }}
+      >
+        <div className="=flex flex-col w-[320px] space-y-8 items-center justify-center bg-[#F6F6F6] p-6 rounded-3xl shadow-xl shadow-black/10 tracking-normal">
+          <div className="w-full flex flex-col items-center justify-center space-y-2">
+            <div className="flex items-center justify-center">
+              <img src={Logo} alt="/" className="w-[120px] h-[120px]" />
+            </div>
+            <div className="w-full flex flex-col items-center justify-center">
+              <p className="text-md font-semibold truncate tracking-tight">
+                Login to your Account
+              </p>
+              <p className="text-xs text-black/50 font-normal truncate">
+                Welcome back, please enter your credentials
+              </p>
+            </div>
           </div>
-          <div className="w-full flex flex-col gap-4 items-center justify-center py-4">
-            {/* username input */}
-            <div className="w-full flex flex-col items-start justify-center gap-1">
-              <p className="text-xs font-semibold text-black/50">Email</p>
-              <div className="w-full flex flex-row gap-1 items-center justify-center rounded-md overflow-hidden bg-[#eae3ff] focus:border border-black py-2">
-                <div className="px-2 w-full border-r border-gray-400/75">
-                  <RiUser4Line className="text-sm text-black" />
-                </div>
+          <div className="w-full flex flex-col items-center justify-center space-y-3">
+            <div className="w-full flex flex-col space-y-2 items-start justify-center">
+              <p className="text-xs font-semibold text-black">Email Address</p>
+              <div className="w-full flex flex-row justify-between gap-x-3 px-4 py-3 bg-[#E6E6E6] rounded-xl">
+                <FiMail size={16} color="#525252" />
                 <input
                   type="text"
-                  className="bg-[#eae3ff] text-xs outline-none min-w-[200px] px-2 truncate"
-                  placeholder="@email.com"
-                  onChange={(e) => setEmail(e.target.value)}
+                  className="text-xs font-normal outline-none border-none bg-[#E6E6E6] w-full"
+                  placeholder="enter email address"
                   value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
-            {/* password */}
-            <div className="w-full flex flex-col items-start justify-center gap-1">
-              <p className="text-xs font-semibold text-black/50">Password</p>
-              <div className="w-full flex flex-row gap-1 items-center justify-center rounded-md overflow-hidden bg-[#eae3ff] focus:border border-black py-2">
-                <div className="px-2 w-full border-r border-gray-400/75">
-                  <IoShieldHalf className="text-sm text-black" />
-                </div>
+            <div className="w-full flex flex-col space-y-2 items-start justify-center">
+              <p className="text-xs font-semibold text-black">Password</p>
+              <div className="w-full flex flex-row justify-between gap-x-3 px-4 py-3 bg-[#E6E6E6] rounded-xl">
+                <FiLock size={16} color="#525252" />
                 <input
                   type="password"
-                  className="bg-[#eae3ff] text-xs outline-none min-w-[200px] px-2"
-                  placeholder="•••••••••••"
-                  onChange={(e) => setPassword(e.target.value)}
+                  className="text-xs font-normal outline-none border-none bg-[#E6E6E6] w-full"
+                  placeholder="enter email address"
                   value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>
           </div>
-          {/* remember me toggle */}
-          <div className="py-2 w-full flex flex-row gap-2 items-center justify-start">
+
+          <div className="w-full flex flex-col items-center justify-center space-y-3 ">
+            <div className="w-full flex flex-row items-center justify-end px-2">
+              <p className="text-xs font-semibold cursor-pointer tracking-tight">
+                Forgot Password
+              </p>
+            </div>
             <div
-              className={
-                !rmbr
-                  ? "bg-[#303030] rounded-sm"
-                  : "p-1 border-2 border-[#303030] rounded-sm"
-              }
-              onClick={toggleRmbr}
+              className="w-full flex items-center justify-center bg-[#050301] py-3 rounded-xl cursor-pointer hover:bg-[#444444] duration-500"
+              onClick={onLogin}
             >
-              {!rmbr ? <BsCheck className="text-white text-xs" /> : null}
+              <p className="text-xs font-semibold text-white">Login</p>
             </div>
-            <p className="text-xs font-normal">Remember me</p>
-          </div>
-          {/* login button */}
-          <div
-            className="w-full flex items-center justify-center py-4"
-            onClick={onLogin}
-          >
-            <div className="w-full py-2 bg-[#303030] rounded-md flex items-center justify-center cursor-pointer hover:bg-[#414141] ease-in-out duration-500">
-              <p className="text-xs font-semibold text-white">Login.</p>
-            </div>
-          </div>
-          <div className="w-full flex flex-row gap-2 items-center justify-center">
-            <div className="w-full border-t border-gray-400"></div>
-            <p className="text-xs font-semibold text-black">or</p>
-            <div className="w-full border-t border-gray-400"></div>
-          </div>
-          <div className="flex flex-row items-center justify-center gap-1 py-4">
-            <p className="text-xs font-semibold text-black/50">
-              Don't have an account?
-            </p>
-            <p className="text-xs font-semibold text-black cursor-pointer">
-              Register
-            </p>
           </div>
         </div>
-        {toastVisible && (
-          <div className="absolute flex flex-row items-center justify-center gap-2 bottom-10 right-10 bg-[#ad3a00] shadow-xl pl-3 pr-4 py-2 rounded-tl-xl rounded-br-xl rounded-bl-xl">
-            <HiExclamation className="text-white text-lg" />
-            <p className="text-sm font-semibold text-white text-center">
-              {message}
-            </p>
-          </div>
-        )}
       </div>
-    </div>
+      {popupModal && (
+        <PopupModal
+          onClose={() => setPopupModal(false)}
+          message={message}
+          icon="login"
+          header="authorization"
+        />
+      )}
+    </>
+
   );
 };
 
