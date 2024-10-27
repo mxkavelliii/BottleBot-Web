@@ -51,8 +51,8 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="fixed h-[100svh] left-0 flex items-center justify-center p-4 ">
-        <div className="flex flex-col items-center justify-center rounded-xl bg-[#FAFAFA] p-2 shadow-xl shadow-black/20 space-y-1">
+      <div className="fixed md:left-0 left-1/2 transform -translate-x-1/2 md:translate-x-0 bottom-0 md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:h-auto flex md:items-center justify-center p-4 z-10">
+        <div className="flex flex-row md:flex-col items-center justify-center rounded-xl bg-[#FAFAFA] p-2 shadow-xl shadow-black/20 space-x-1 md:space-x-0 md:space-y-1">
           <div
             className="p-2 flex items-center justify-center cursor-pointer rounded-full"
             onClick={() => navigate("/admin/dashboard")}
@@ -60,7 +60,7 @@ const Navbar = () => {
             {activeTab === "dashboard" ? (
               <RiHome3Fill size={20} color="#699900" />
             ) : (
-              <RiHome3Line size={20} color="#9aa2a6" />
+              <RiHome3Line size={20} color="#699900" />
             )}
           </div>
           <div
@@ -70,7 +70,7 @@ const Navbar = () => {
             {activeTab === "monitor" ? (
               <RiMacbookFill size={20} color="#699900" />
             ) : (
-              <RiMacbookLine size={20} color="#9aa2a6" />
+              <RiMacbookLine size={20} color="#699900" />
             )}
           </div>
           <div
@@ -80,7 +80,7 @@ const Navbar = () => {
             {activeTab === "redeem" ? (
               <RiShoppingBag2Fill size={20} color="#699900" />
             ) : (
-              <RiShoppingBag2Line size={20} color="#9aa2a6" />
+              <RiShoppingBag2Line size={20} color="#699900" />
             )}
           </div>
           <div
@@ -90,7 +90,7 @@ const Navbar = () => {
             {activeTab === "history" ? (
               <RiCalendarEventFill size={20} color="#699900" />
             ) : (
-              <RiCalendarEventLine size={20} color="#9aa2a6" />
+              <RiCalendarEventLine size={20} color="#699900" />
             )}
           </div>
           <div
@@ -100,7 +100,7 @@ const Navbar = () => {
             {activeTab === "users" ? (
               <RiUserSmileFill size={20} color="#699900" />
             ) : (
-              <RiUserSmileLine size={20} color="#9aa2a6" />
+              <RiUserSmileLine size={20} color="#699900" />
             )}
           </div>
           <div
@@ -112,7 +112,7 @@ const Navbar = () => {
             {activeTab === "profile" ? (
               <RiUser4Fill size={20} color="#699900" />
             ) : (
-              <RiUser4Line size={20} color="#9aa2a6" />
+              <RiUser4Line size={20} color="#699900" />
             )}
           </div>
         </div>

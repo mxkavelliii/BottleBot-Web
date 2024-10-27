@@ -2,12 +2,21 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Admin/Navbar";
 import { useAuth } from "../../context/AuthProvider";
 import Image from "../../assets/Man.jpg";
+import Logo from "../../assets/Bottle_Bot.png";
 
 //icons
-import { RiLoginBoxLine } from "react-icons/ri";
+import {
+  RiDoorOpenLine,
+  RiRefreshLine,
+  RiEdit2Line,
+  RiCloseLine,
+  RiCheckLine,
+} from "react-icons/ri";
+import axios from "axios";
+import PopupModal from "../../Components/PopupModal";
 
 const Profile = () => {
-  const { onLogout, user } = useAuth();
+  const { onLogout, updateUser, user } = useAuth();
 
   //data
   const [firstName, setFirstName] = useState("");
@@ -15,8 +24,8 @@ const Profile = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [birthDate, setBirthDate] = useState(new Date());
-  const [gender, setGender] = useState("");
-  const [civilStatus, setCivilStatus] = useState("");
+  const [gender, setGender] = useState("Male");
+  const [civilStatus, setCivilStatus] = useState("Single");
   const [nationality, setNationality] = useState("");
   const [houseNumber, setHouseNumber] = useState("");
   const [street, setStreet] = useState("");
@@ -27,9 +36,16 @@ const Profile = () => {
   const [occupation, setOccupation] = useState("");
   const [password, setPassword] = useState("");
   const [level, setLevel] = useState("");
+  const [formattedBirthDate, setFormattedBirthDate] = useState("");
+
+  const [edit, setEdit] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [visibleModal, setVisibleModal] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   //initialize data
-  useEffect(() => {
+  const setFieldsData = (user) => {
     setFirstName(user?.personalInfo.firstName);
     setMiddleName(user?.personalInfo.middleName);
     setLastName(user?.personalInfo.lastName);
@@ -52,69 +68,502 @@ const Profile = () => {
     setEmail(user.credentials.email);
     setPassword(user?.credentials.password);
     setLevel(user?.credentials.level);
+  };
+
+  useEffect(() => {
+    fetchUser();
   }, []);
+
+  const fetchUser = async () => {
+    setLoading(true);
+    if (user && user._id) {
+      try {
+        let url = `http://localhost:8080/api/users/${user._id}`;
+
+        let response = await axios.get(url);
+
+        if (response.status === 200) {
+          updateUser(response.data.user);
+          setFieldsData(response.data.user);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const updateProfile = async () => {
+    setLoading(true);
+    if (user) {
+      try {
+        let url = `http://localhost:8080/api/users/${user._id}`;
+
+        const response = await axios.put(url, {
+          personalInfo: {
+            firstName: firstName,
+            middleName: middleName,
+            lastName: lastName,
+            dateOfBirth: birthDate,
+            gender: gender,
+            civilStatus: civilStatus,
+            nationality: nationality,
+          },
+          contactInfo: {
+            address: {
+              houseNumber: houseNumber,
+              street: street,
+              barangay: brgy,
+              city: city,
+            },
+            phoneNumbers: [phoneNumber],
+          },
+          economicInfo: {
+            employmentStatus: employmentStatus,
+            occupation: occupation,
+          },
+          credentials: {
+            email: email,
+            password: password,
+            level: level,
+          },
+        });
+
+        if (response.status === 200) {
+          setMessage(response.data.message);
+          setVisibleModal(true);
+          setIsError(false);
+        }
+      } catch (error) {
+        setMessage(error.response.data.message);
+        setVisibleModal(true);
+        setIsError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const formatDate = (date) => {
+    return date.toISOString().split("T")[0]; // Formats date to 'YYYY-MM-DD'
+  };
+
+  const onDateChange = (event) => {
+    const selectedDate = new Date(event.target.value);
+    setBirthDate(selectedDate);
+    setFormattedBirthDate(formatDate(selectedDate));
+  };
+
+  const handleGenderToggle = () => {
+    if (gender === "Male") {
+      setGender("Female");
+    } else if (gender === "Female") {
+      setGender("Other");
+    } else if (gender === "Other") {
+      setGender("Male");
+    }
+  };
+
+  const handleStatusToggle = () => {
+    if (civilStatus === "Single") {
+      setCivilStatus("Married");
+    } else if (civilStatus === "Married") {
+      setCivilStatus("Widowed");
+    } else if (civilStatus === "Widowed") {
+      setCivilStatus("Single");
+    }
+  };
 
   return (
     <>
       <Navbar />
-      <div className="w-full min-h-[100svh] flex flex-col space-y-6 items-center justify-start bg-[#E6E6E6] px-4 py-6 font-dm tracking-normal">
+      <div className="w-full min-h-[100svh] flex flex-col space-y-6 items-center justify-start bg-[#E6E6E6] px-4 pt-2 pb-6 font-dm tracking-normal">
         <div className="w-full md:w-[820px] flex flex-row justify-between items-center">
-          <p className="text-sm font-semibold">User Profile</p>
-          <RiLoginBoxLine
-            size={16}
-            color="black"
-            className="cursor-pointer"
-            onClick={onLogout}
-          />
+          <div className="flex flex-row space-x-1 items-center justify-center">
+            <img src={Logo} alt="/" className="w-[30px] h-[30px]" />
+            <p className="text-xs font-extrabold text-[#699900]">Bottle Bot</p>
+          </div>
+          <div className="flex flex-row space-x-4 items-center justify-center">
+            <RiDoorOpenLine
+              size={16}
+              color="rgba(0, 0, 0, 0.5)"
+              className="cursor-pointer"
+              onClick={onLogout}
+            />
+            <img
+              src={Image}
+              alt="/"
+              className="w-[30px] h-[30px] rounded-full"
+            />
+          </div>
         </div>
-        <div className="w-full md:w-[820px] flex flex-col items-center justify-center bg-[#FAFAFA] rounded-xl tracking-normal">
-          <div className="w-full flex flex-row items-center justify-start space-x-4 p-8">
-            <div className="h-[100px] w-[100px] rounded-full overflow-hidden">
-              <img src={Image} alt="/" className="object-cover" />
-            </div>
-            <div className="w-3/5 flex flex-col truncate items-start justify-center">
-              <p className="text-md font-semibold">{`${user.personalInfo.firstName} ${user.personalInfo.lastName}`}</p>
-              <div className="flex items-center justify-center px-2 py-1 rounded-md bg-[#699900]">
-                <p className="text-xs text-white font-normal uppercase">
-                  #{user._id}
-                </p>
-              </div>
+        <div className="w-full md:w-[820px] flex flex-col justify-center items-center rounded-tl-3xl rounded-br-3xl rounded-bl-3xl overflow-hidden">
+          <div
+            className="h-[20svh] w-full p-6"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right top, #e9ff00, #d9f700, #c9f000, #b9e800, #aae000, #78d846, #47cc68, #00bf81, #00a4a2, #17849e, #51657b, #4e4e4e)",
+              backgroundSize: "cover",
+            }}
+          >
+            <div className="w-full flex flex-row space-x-2 items-center justify-end">
+              {edit ? (
+                <>
+                  <div
+                    className="flex p-2 rounded-full bg-[#050301]/25 cursor-pointer"
+                    onClick={() => {
+                      fetchUser();
+                      setEdit(false);
+                    }}
+                  >
+                    <RiCloseLine size={16} color="white" />
+                  </div>
+                  <div
+                    className="flex p-2 rounded-full bg-[#050301]/25 cursor-pointer"
+                    onClick={updateProfile}
+                  >
+                    <RiCheckLine size={16} color="white" />
+                  </div>
+                </>
+              ) : (
+                <div
+                  className="flex p-2 rounded-full bg-[#050301]/25 cursor-pointer"
+                  onClick={() => setEdit(true)}
+                >
+                  <RiEdit2Line size={16} color="white" />
+                </div>
+              )}
             </div>
           </div>
-          <div className="w-full border-b border-black/5"></div>
-          <div className="w-full flex flex-col items-center justify-center p-8">
-            <div className="w-full flex flex-col items-center justify-center space-y-4">
-              <div className="w-full flex flex-row justify-between items-center">
-                <p className="text-xs font-semibold w-1/2 truncate">
-                  First Name
-                </p>
-                <input
-                  type="text"
-                  className="outline-none border-none text-xs text-right w-1/2 truncate bg-[#FAFAFA]"
-                />
+          <div className="w-full flex flex-col items-center justify-center space-y-6  bg-[#FAFAFA] p-6">
+            <div className="w-full flex flex-row relative items-center justify-start space-x-4 mb-6">
+              <div className="absolute top-[-200%] w-[120px] h-[120px] flex items-center justify-center rounded-full overflow-hidden border-4 border-white">
+                <img src={Image} alt="/" className="bg-cover" />
               </div>
-              <div className="w-full flex flex-row justify-between items-center">
-                <p className="text-xs font-semibold w-1/2 truncate">
-                  Middle Name
+              <div className="w-[120px] flex items-center justify-center rounded-full overflow-hidden"></div>
+              <div className="w-2/3 truncate flex flex-col items-start justify-center">
+                <p className="text-sm font-semibold">
+                  {user
+                    ? `${user.personalInfo.firstName} ${user.personalInfo.lastName}`
+                    : null}
                 </p>
-                <input
-                  type="text"
-                  className="outline-none border-none text-xs text-right w-1/2 truncate bg-[#FAFAFA]"
-                />
+                <p className="text-xs font-normal uppercase text-[#6E6E6E]">
+                  #{user ? user._id : null}
+                </p>
               </div>
-              <div className="w-full flex flex-row justify-between items-center">
-                <p className="text-xs font-semibold w-1/2 truncate">
-                  Last Name
+            </div>
+            <div className="w-full flex flex-col items-center justify-center">
+              <div className="w-full flex flex-col items-start justify-center pb-6">
+                <p className="text-sm font-semibold">Personal Information</p>
+                <p className="text-xs font-normal text-[#6E6E6E]">
+                  name, gender, civil status etc.
                 </p>
-                <input
-                  type="text"
-                  className="outline-none border-none text-xs text-right w-1/2 truncate bg-[#FAFAFA]"
-                />
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">First Name</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="first name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Middle Name</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="first name"
+                    value={middleName}
+                    onChange={(e) => setMiddleName(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Last Name</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Birth Date</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="date"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="last name"
+                    value={formattedBirthDate}
+                    onChange={onDateChange}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Gender</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end space-x-2">
+                  <p className="text-xs font-normal">{gender}</p>
+
+                  <RiRefreshLine
+                    size={16}
+                    color="black"
+                    className="cursor-pointer"
+                    onClick={edit ? handleGenderToggle : null}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Civil Status</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end space-x-2">
+                  <p className="text-xs font-normal">{civilStatus}</p>
+
+                  <RiRefreshLine
+                    size={16}
+                    color="black"
+                    className="cursor-pointer"
+                    onClick={edit ? handleStatusToggle : null}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Nationality</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="nationality"
+                    value={nationality}
+                    onChange={(e) => setNationality(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="w-full flex flex-col items-center justify-center">
+              <div className="w-full flex flex-col items-start justify-center pb-6">
+                <p className="text-sm font-semibold">Contact Information</p>
+                <p className="text-xs font-normal text-[#6E6E6E]">
+                  address and phone number
+                </p>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">House Number</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs capitalize"
+                    placeholder="house number"
+                    value={houseNumber}
+                    onChange={(e) => setHouseNumber(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Street</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="street"
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Barangay</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="barangay"
+                    value={brgy}
+                    onChange={(e) => setBrgy(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">City</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="city"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Phone Number</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="phone number"
+                    value={phoneNumber}
+                    maxLength={11}
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      if (/^\d*$/.test(value) && value.length <= 11) {
+                        setPhoneNumber(value);
+                      }
+                    }}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="w-full flex flex-col items-center justify-center">
+              <div className="w-full flex flex-col items-start justify-center pb-6">
+                <p className="text-sm font-semibold">Economic Information</p>
+                <p className="text-xs font-normal text-[#6E6E6E]">
+                  occupation and employment
+                </p>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Employment Status</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs capitalize"
+                    placeholder="employment status"
+                    value={employmentStatus}
+                    onChange={(e) => setEmploymentStatus(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Occupation</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="occupation"
+                    value={occupation}
+                    onChange={(e) => setOccupation(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="w-full flex flex-col items-center justify-center">
+              <div className="w-full flex flex-col items-start justify-center pb-6">
+                <p className="text-sm font-semibold">Credentials</p>
+                <p className="text-xs font-normal text-[#6E6E6E]">
+                  email, password etc.
+                </p>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Email</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Password</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="password"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    placeholder="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
+              </div>
+              <div className="w-full flex flex-row items-center justify-between pb-4">
+                <div className="w-1/2 flex flex-row items-center justify-start">
+                  <p className="text-xs font-semibold">Level</p>
+                </div>
+                <div className="w-1/2 flex flex-row items-center justify-end">
+                  <input
+                    type="text"
+                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs capitalize"
+                    placeholder="level"
+                    value={level}
+                    onChange={(e) => setLevel(e.target.value)}
+                    readOnly={edit ? false : true}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {visibleModal && (
+        <PopupModal
+          icon="profile"
+          message={message}
+          header="profile"
+          onClose={() => {
+            setVisibleModal(false);
+            if (!isError) {
+              setEdit(false);
+              fetchUser();
+            }
+          }}
+        />
+      )}
     </>
   );
 };
