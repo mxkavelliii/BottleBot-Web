@@ -46,17 +46,17 @@ const Login = () => {
         className="w-full h-[100svh] flex items-center justify-center font-dm"
         style={{
           backgroundImage:
-            "linear-gradient(to right top, #553657, #8f4164, #c5525c, #e87443, #e7872f, #df9c19, #bdac00, #aaa600, #989f00, #d0b100)",
+            "linear-gradient(to right top, #e9ff00, #d9f700, #c9f000, #b9e800, #aae000, #78d846, #47cc68, #00bf81, #00a4a2, #17849e, #51657b, #4e4e4e)",
           backgroundSize: "cover",
         }}
       >
-        <div className="=flex flex-col w-[320px] space-y-8 items-center justify-center bg-[#F6F6F6] p-6 rounded-3xl shadow-xl shadow-black/10 tracking-normal">
+        <div className="=flex flex-col w-[320px] space-y-8 items-center justify-center bg-[#F6F6F6] p-4 rounded-3xl shadow-xl shadow-black/10 tracking-normal">
           <div className="w-full flex flex-col items-center justify-center space-y-2">
             <div className="flex items-center justify-center">
-              <img src={Logo} alt="/" className="w-[120px] h-[120px]" />
+              <img src={Logo} alt="/" className="w-[100px] h-[100px]" />
             </div>
             <div className="w-full flex flex-col items-center justify-center">
-              <p className="text-md font-semibold truncate tracking-tight">
+              <p className="text-sm font-semibold truncate tracking-tight">
                 Login to your Account
               </p>
               <p className="text-xs text-black/50 font-normal truncate">
@@ -85,7 +85,7 @@ const Login = () => {
                 <input
                   type="password"
                   className="text-xs font-normal outline-none border-none bg-[#E6E6E6] w-full"
-                  placeholder="enter email address"
+                  placeholder="enter password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -117,7 +117,6 @@ const Login = () => {
         />
       )}
     </>
-
   );
 };
 
