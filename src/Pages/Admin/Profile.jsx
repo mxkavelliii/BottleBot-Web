@@ -264,110 +264,107 @@ const Profile = () => {
               </div>
             </div>
             <div className="w-full flex flex-col items-center justify-center">
-              <div className="w-full flex flex-col items-start justify-center pb-6">
-                <p className="text-sm font-semibold">Personal Information</p>
-                <p className="text-xs font-normal text-[#6E6E6E]">
-                  name, gender, civil status etc.
-                </p>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">First Name</p>
+              {/* Personal Information */}
+              <div className="w-full flex flex-col items-center justify-center space-y-4">
+                {/* header */}
+                <div className="w-full flex flex-col items-start justify-center pb-2">
+                  <p className="text-sm font-semibold">Personal Information</p>
+                  <p className="text-xs font-normal text-[#6E6E6E]">
+                    name, birthdate, gender, civil status etc.
+                  </p>
                 </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                {/* content */}
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">First Name</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="first name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     readOnly={edit ? false : true}
                   />
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Middle Name</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Middle Name</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
-                    placeholder="first name"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
+                    placeholder="middle name"
                     value={middleName}
                     onChange={(e) => setMiddleName(e.target.value)}
                     readOnly={edit ? false : true}
                   />
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Last Name</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Last Name</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="last name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     readOnly={edit ? false : true}
                   />
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Birth Date</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Birth Date</p>
+                  </div>
                   <input
                     type="date"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
-                    placeholder="last name"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
+                    placeholder="date of birth"
                     value={formattedBirthDate}
                     onChange={onDateChange}
                     readOnly={edit ? false : true}
                   />
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Gender</p>
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Gender</p>
+                  </div>
+                  <div className="w-1/2 flex flex-row items-center justify-between px-4 py-3 rounded-xl bg-[#EDEDED]">
+                    <p className="text-xs font-normal">{gender}</p>
+                    {edit ? (
+                      <RiRefreshLine
+                        size={16}
+                        color="black"
+                        className="cursor-pointer"
+                        onClick={handleGenderToggle}
+                      />
+                    ) : null}
+                  </div>
                 </div>
-                <div className="w-1/2 flex flex-row items-center justify-end space-x-2">
-                  <p className="text-xs font-normal">{gender}</p>
-
-                  <RiRefreshLine
-                    size={16}
-                    color="black"
-                    className="cursor-pointer"
-                    onClick={edit ? handleGenderToggle : null}
-                  />
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Civil Status</p>
+                  </div>
+                  <div className="w-1/2 flex flex-row items-center justify-between px-4 py-3 rounded-xl bg-[#EDEDED]">
+                    <p className="text-xs font-normal">{civilStatus}</p>
+                    {edit ? (
+                      <RiRefreshLine
+                        size={16}
+                        color="black"
+                        className="cursor-pointer"
+                        onClick={handleStatusToggle}
+                      />
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Civil Status</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end space-x-2">
-                  <p className="text-xs font-normal">{civilStatus}</p>
-
-                  <RiRefreshLine
-                    size={16}
-                    color="black"
-                    className="cursor-pointer"
-                    onClick={edit ? handleStatusToggle : null}
-                  />
-                </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Nationality</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Nationality</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="nationality"
                     value={nationality}
                     onChange={(e) => setNationality(e.target.value)}
@@ -375,82 +372,75 @@ const Profile = () => {
                   />
                 </div>
               </div>
-            </div>
-            <div className="w-full flex flex-col items-center justify-center">
-              <div className="w-full flex flex-col items-start justify-center pb-6">
-                <p className="text-sm font-semibold">Contact Information</p>
-                <p className="text-xs font-normal text-[#6E6E6E]">
-                  address and phone number
-                </p>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">House Number</p>
+              {/* Contact Information */}
+              <div className="w-full flex flex-col items-center justify-center space-y-4">
+                {/* header */}
+                <div className="w-full flex flex-col items-start justify-center pb-2">
+                  <p className="text-sm font-semibold">Contact Information</p>
+                  <p className="text-xs font-normal text-[#6E6E6E]">
+                    phone number, street, city, brgy etc
+                  </p>
                 </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                {/* content */}
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">House Number</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs capitalize"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="house number"
                     value={houseNumber}
                     onChange={(e) => setHouseNumber(e.target.value)}
                     readOnly={edit ? false : true}
                   />
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Street</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Street</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="street"
                     value={street}
                     onChange={(e) => setStreet(e.target.value)}
                     readOnly={edit ? false : true}
                   />
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Barangay</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Barangay</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="barangay"
                     value={brgy}
                     onChange={(e) => setBrgy(e.target.value)}
                     readOnly={edit ? false : true}
                   />
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">City</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">City</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="city"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     readOnly={edit ? false : true}
                   />
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Phone Number</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Phone Number</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="phone number"
                     value={phoneNumber}
                     maxLength={11}
@@ -465,37 +455,36 @@ const Profile = () => {
                   />
                 </div>
               </div>
-            </div>
-            <div className="w-full flex flex-col items-center justify-center">
-              <div className="w-full flex flex-col items-start justify-center pb-6">
-                <p className="text-sm font-semibold">Economic Information</p>
-                <p className="text-xs font-normal text-[#6E6E6E]">
-                  occupation and employment
-                </p>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Employment Status</p>
+              {/* Economic Information */}
+              <div className="w-full flex flex-col items-center justify-center space-y-4">
+                {/* header */}
+                <div className="w-full flex flex-col items-start justify-center pb-2">
+                  <p className="text-sm font-semibold">Economic Information</p>
+                  <p className="text-xs font-normal text-[#6E6E6E]">
+                    occupation and employment status
+                  </p>
                 </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                {/* content */}
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Employment Status</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs capitalize"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="employment status"
                     value={employmentStatus}
                     onChange={(e) => setEmploymentStatus(e.target.value)}
                     readOnly={edit ? false : true}
                   />
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Occupation</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Occupation</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="occupation"
                     value={occupation}
                     onChange={(e) => setOccupation(e.target.value)}
@@ -503,57 +492,49 @@ const Profile = () => {
                   />
                 </div>
               </div>
-            </div>
-            <div className="w-full flex flex-col items-center justify-center">
-              <div className="w-full flex flex-col items-start justify-center pb-6">
-                <p className="text-sm font-semibold">Credentials</p>
-                <p className="text-xs font-normal text-[#6E6E6E]">
-                  email, password etc.
-                </p>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Email</p>
+              {/* Credentials */}
+              <div className="w-full flex flex-col items-center justify-center space-y-4">
+                {/* header */}
+                <div className="w-full flex flex-col items-start justify-center pb-2">
+                  <p className="text-sm font-semibold">Credentials</p>
+                  <p className="text-xs font-normal text-[#6E6E6E]">
+                    email, password and user level
+                  </p>
                 </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                {/* content */}
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Email</p>
+                  </div>
                   <input
                     type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     readOnly={edit ? false : true}
                   />
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Password</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Password</p>
+                  </div>
                   <input
                     type="password"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs"
+                    className="w-1/2 text-left bg-[#EDEDED] outline-none border-none rounded-xl px-4 py-3 text-xs"
                     placeholder="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     readOnly={edit ? false : true}
                   />
                 </div>
-              </div>
-              <div className="w-full flex flex-row items-center justify-between pb-4">
-                <div className="w-1/2 flex flex-row items-center justify-start">
-                  <p className="text-xs font-semibold">Level</p>
-                </div>
-                <div className="w-1/2 flex flex-row items-center justify-end">
-                  <input
-                    type="text"
-                    className="outline-none border-none bg-[#FAFAFA] text-right text-xs capitalize"
-                    placeholder="level"
-                    value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                    readOnly={edit ? false : true}
-                  />
+                <div className="w-full flex flex-row items-center justify-between">
+                  <div className="w-1/2">
+                    <p className="text-xs font-normal">Level</p>
+                  </div>
+                  <div className="w-1/2 flex flex-row items-center justify-between px-4 py-3 rounded-xl bg-[#EDEDED]">
+                    <p className="text-xs font-normal">{level}</p>
+                  </div>
                 </div>
               </div>
             </div>
