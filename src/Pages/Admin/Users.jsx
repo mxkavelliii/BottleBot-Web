@@ -160,7 +160,7 @@ const Users = () => {
               onChange={handleSearch}
             />
           </div>
-          <div className="flex flex-row gap-4 items-center justify-between bg-[#050301] rounded-full px-4 py-1.5">
+          <div className="flex flex-row gap-4 items-center justify-between bg-[#050301] rounded-full px-3 py-1.5">
             <p className="text-xs font-normal text-white">{searchType}</p>
             <RiRefreshLine
               size={16}
