@@ -100,7 +100,7 @@ const Login = () => {
               </p>
             </div>
             <div
-              className="w-full flex items-center justify-center bg-[#050301] py-3 rounded-xl cursor-pointer hover:bg-[#444444] duration-500"
+              className="w-full flex items-center justify-center bg-gradient-to-tr from-[#466600] to-[#699900] py-3 rounded-xl cursor-pointer hover:bg-[#444444] duration-500"
               onClick={onLogin}
             >
               <p className="text-xs font-semibold text-white">Login</p>

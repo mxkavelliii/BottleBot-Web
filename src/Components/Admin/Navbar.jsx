@@ -16,8 +16,8 @@ import {
   RiHome3Fill,
   RiMacbookLine,
   RiMacbookFill,
-  RiShoppingBag2Line,
-  RiShoppingBag2Fill,
+  RiShoppingBagLine,
+  RiShoppingBagFill,
   RiCalendarEventLine,
   RiCalendarEventFill,
   RiUserSmileLine,
@@ -78,9 +78,9 @@ const Navbar = () => {
             onClick={() => setActiveTab("redeem")}
           >
             {activeTab === "redeem" ? (
-              <RiShoppingBag2Fill size={20} color="#699900" />
+              <RiShoppingBagFill size={20} color="#699900" />
             ) : (
-              <RiShoppingBag2Line size={20} color="#699900" />
+              <RiShoppingBagLine size={20} color="#699900" />
             )}
           </div>
           <div
@@ -95,7 +95,7 @@ const Navbar = () => {
           </div>
           <div
             className="p-2 flex items-center justify-center cursor-pointer rounded-full"
-            onClick={() => setActiveTab("users")}
+            onClick={() => navigate("/admin/users")}
           >
             {activeTab === "users" ? (
               <RiUserSmileFill size={20} color="#699900" />

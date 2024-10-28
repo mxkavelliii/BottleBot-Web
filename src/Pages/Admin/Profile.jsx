@@ -178,13 +178,23 @@ const Profile = () => {
   return (
     <>
       <Navbar />
-      <div className="w-full min-h-[100svh] flex flex-col space-y-6 items-center justify-start bg-[#E6E6E6] px-4 pt-2 pb-6 font-dm tracking-normal">
+      <div className="w-full min-h-[100svh] flex flex-col space-y-6 items-center justify-start bg-[#E6E6E6] px-4 pt-4 pb-6 font-dm tracking-normal">
         <div className="w-full md:w-[820px] flex flex-row justify-between items-center">
-          <div className="flex flex-row space-x-1 items-center justify-center">
-            <img src={Logo} alt="/" className="w-[30px] h-[30px]" />
-            <p className="text-xs font-extrabold text-[#699900]">Bottle Bot</p>
+          <div className="flex flex-row space-x-2 items-center justify-center">
+            <div className="flex items-center justify-center bg-[#FAFAFA] rounded-xl p-1 shadow-xl shadow-black/10">
+              <img
+                src={Logo}
+                alt="/"
+                className="w-[30px] h-[30px] rounded-full"
+              />
+            </div>
+            <p className="text-xs font-normal">
+              {user
+                ? `Welcome, ${user.personalInfo.firstName} ${user.personalInfo.lastName}`
+                : null}
+            </p>
           </div>
-          <div className="flex flex-row space-x-4 items-center justify-center">
+          <div className="flex flex-row space-x-4 items-center justify-center px-2">
             <RiDoorOpenLine
               size={16}
               color="rgba(0, 0, 0, 0.5)"
@@ -198,7 +208,7 @@ const Profile = () => {
             />
           </div>
         </div>
-        <div className="w-full md:w-[820px] flex flex-col justify-center items-center rounded-tl-3xl rounded-br-3xl rounded-bl-3xl overflow-hidden">
+        <div className="w-full md:w-[820px] flex flex-col justify-center items-center rounded-tl-3xl rounded-br-3xl rounded-bl-3xl overflow-hidden font-dm">
           <div
             className="h-[20svh] w-full p-6"
             style={{
@@ -549,6 +559,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
+        <div className="w-full md:w-[820px] flex flex-col justify-between items-center font-dm pb-24"></div>
       </div>
       {visibleModal && (
         <PopupModal
