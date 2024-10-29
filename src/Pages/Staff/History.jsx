@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Navbar from "../../Components/Admin/Navbar";
+import Navbar from "../../Components/Staff/Navbar";
 import Image from "../../assets/Man.jpg";
 import Logo from "../../assets/Bottle_Bot.png";
 import {
@@ -290,26 +290,6 @@ const History = () => {
                               {reward ? reward.rewardName : "Reward Not Found"}
                             </p>
                           </div>
-                          <div className="flex flex-row items-center space-x-2 justify-start px-3 py-2 rounded-full bg-[#050301]/25">
-                            <RiEdit2Line
-                              size={16}
-                              color="white"
-                              className="cursor-pointer"
-                              onClick={() => {
-                                setShowRewardForm(true);
-                                setFormType("edit");
-                                setSelectedRewardHistory(rewardHistory);
-                              }}
-                            />
-                            <RiDeleteBin4Line
-                              size={16}
-                              color="white"
-                              className="cursor-pointer"
-                              onClick={() =>
-                                deleteRewardHistory(rewardHistory._id)
-                              }
-                            />
-                          </div>
                         </div>
                       </div>
                       <div className="w-full flex flex-row items-center justify-start space-x-3 px-6 py-4">
@@ -360,15 +340,6 @@ const History = () => {
         </div>
         <div className="w-full md:w-[820px] flex flex-col justify-between items-center font-dm">
           <div className="w-full flex flex-row items-start justify-start space-x-2">
-            <div
-              className="p-2 flex items-center justify-center rounded-full bg-[#050301] cursor-pointer"
-              onClick={() => {
-                setShowPointsForm(true);
-                setFormType("add");
-              }}
-            >
-              <RiAddLine size={16} color="white" />
-            </div>
             <div className="w-1/2 flex flex-col items-start justify-center pb-6">
               <p className="text-sm font-semibold">Points History</p>
               <p className="text-xs font-normal text-[#6E6E6E]">
@@ -400,24 +371,6 @@ const History = () => {
                                 : "pt."
                             }`}
                           </p>
-                        </div>
-                        <div className="flex flex-row items-center space-x-2 justify-start px-3 py-2 rounded-full bg-[#050301]/25">
-                          <RiEdit2Line
-                            size={16}
-                            color="white"
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setShowPointsForm(true);
-                              setFormType("edit");
-                              setSelectedPointHistory(pointHistory);
-                            }}
-                          />
-                          <RiDeleteBin4Line
-                            size={16}
-                            color="white"
-                            className="cursor-pointer"
-                            onClick={() => deletePointHistory(pointHistory._id)}
-                          />
                         </div>
                       </div>
                     </div>

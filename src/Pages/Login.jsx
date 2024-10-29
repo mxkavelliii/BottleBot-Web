@@ -27,11 +27,15 @@ const Login = () => {
       });
 
       if (response.data.success === true) {
-        if (
-          response.data.user.credentials.level === "admin" ||
-          response.data.user.credentials.level === "staff"
-        ) {
+        if (response.data.user.credentials.level === "admin") {
           navigate("/admin/dashboard");
+          setIsAuthenticated(true);
+          setToken(response.data.token);
+          setUser(response.data.user);
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          localStorage.setItem("token", response.data.token);
+        } else if (response.data.user.credentials.level === "staff") {
+          navigate("/staff/dashboard");
           setIsAuthenticated(true);
           setToken(response.data.token);
           setUser(response.data.user);
