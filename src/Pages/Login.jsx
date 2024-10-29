@@ -27,16 +27,25 @@ const Login = () => {
       });
 
       if (response.data.success === true) {
-        navigate("/admin/dashboard");
-        setIsAuthenticated(true);
-        setToken(response.data.token);
-        setUser(response.data.user);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("token", response.data.token);
+        if (
+          response.data.user.credentials.level === "admin" ||
+          response.data.user.credentials.level === "staff"
+        ) {
+          navigate("/admin/dashboard");
+          setIsAuthenticated(true);
+          setToken(response.data.token);
+          setUser(response.data.user);
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          localStorage.setItem("token", response.data.token);
+        } else {
+          console.log(response.data.user.credentials.level);
+          setPopupModal(true);
+          setMessage("For Admin and Staffs Only");
+        }
       }
     } catch (error) {
       setPopupModal(true);
-      setIsAuthenticated(true);
+      setIsAuthenticated(false);
       setMessage(error.response.data.message || "An Error Occurred");
     }
   };

@@ -171,13 +171,7 @@ const Users = () => {
           </div>
         </div>
         <div className="w-full md:w-[820px] flex flex-col justify-between items-center font-dm">
-          <div className="w-full flex flex-row items-start justify-between">
-            <div className="w-full flex flex-col items-start justify-center pb-6">
-              <p className="text-sm font-semibold">Manage Users</p>
-              <p className="text-xs font-normal text-[#6E6E6E]">
-                Add, Delete, View or Edit users
-              </p>
-            </div>
+          <div className="w-full flex flex-row items-start justify-start gap-x-3">
             <div
               className="p-2 flex items-center justify-center rounded-full bg-[#050301] cursor-pointer"
               onClick={() => {
@@ -186,6 +180,12 @@ const Users = () => {
               }}
             >
               <RiAddLine size={16} color="white" />
+            </div>
+            <div className="w-2/3 flex flex-col items-start justify-center pb-6">
+              <p className="text-sm font-semibold">Manage Users</p>
+              <p className="text-xs font-normal text-[#6E6E6E]">
+                Add, Delete, View or Edit users
+              </p>
             </div>
           </div>
           <div
@@ -202,7 +202,7 @@ const Users = () => {
                   key={user._id}
                 >
                   <div
-                    className="w-full flex flex-row items-center justify-between px-6 pt-6 pb-14"
+                    className="w-full flex flex-row items-center justify-between px-6 pt-4 pb-32"
                     style={{
                       backgroundImage:
                         "linear-gradient(to right top, #e9ff00, #d9f700, #c9f000, #b9e800, #aae000, #78d846, #47cc68, #00bf81, #00a4a2, #17849e, #51657b, #4e4e4e)",
@@ -233,7 +233,7 @@ const Users = () => {
                       />
                     </div>
                   </div>
-                  <div className="w-full flex flex-row items-center justify-start space-x-3 p-6">
+                  <div className="w-full flex flex-row items-center justify-start space-x-3 px-6 py-4">
                     <img
                       src={Image}
                       alt="/"
