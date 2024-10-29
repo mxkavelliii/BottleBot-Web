@@ -75,7 +75,7 @@ const Navbar = () => {
           </div>
           <div
             className="p-2 flex items-center justify-center cursor-pointer rounded-full"
-            onClick={() => setActiveTab("redeem")}
+            onClick={() => navigate("/admin/redeem")}
           >
             {activeTab === "redeem" ? (
               <RiShoppingBagFill size={20} color="#699900" />
@@ -85,7 +85,7 @@ const Navbar = () => {
           </div>
           <div
             className="p-2 flex items-center justify-center cursor-pointer rounded-full"
-            onClick={() => setActiveTab("history")}
+            onClick={() => navigate("/admin/history")}
           >
             {activeTab === "history" ? (
               <RiCalendarEventFill size={20} color="#699900" />
