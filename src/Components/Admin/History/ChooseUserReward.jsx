@@ -177,8 +177,8 @@ const ChooseUserReward = ({ onClose, formType, data, reward }) => {
                         <img src={Image} alt="/" />
                       </div>
                       <div className="w-2/3 flex flex-col items-start justify-center">
-                        <p className="text-xs font-semibold truncate">{`${user.personalInfo.firstName} ${user.personalInfo.lastName} `}</p>
-                        <p className="text-xs font-normal uppercase text-[#6E6E6E] truncate">
+                        <p className="text-xs font-semibold w-full truncate">{`${user.personalInfo.firstName} ${user.personalInfo.lastName} `}</p>
+                        <p className="text-xs font-normal uppercase text-[#6E6E6E] w-full truncate">
                           {`${getUserPoints(user._id)} ${
                             getUserPoints(user._id) > 1 ? "pts." : "pt."
                           }`}

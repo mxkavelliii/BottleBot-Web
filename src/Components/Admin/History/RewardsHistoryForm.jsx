@@ -130,10 +130,10 @@ const RewardsHistoryForm = ({ onClose, formType, data }) => {
                         />
                       </div>
                       <div className="w-2/3 flex flex-col items-start justify-center">
-                        <p className="text-xs font-semibold truncate">
+                        <p className="text-xs font-semibold w-full truncate">
                           {reward.rewardName}
                         </p>
-                        <p className="text-xs font-normal uppercase text-[#6E6E6E] truncate">
+                        <p className="text-xs font-normal uppercase text-[#6E6E6E] w-full truncate">
                           {reward.pointsRequired} pt., {reward.stocks} avail.
                         </p>
                       </div>
