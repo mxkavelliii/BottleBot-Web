@@ -19,18 +19,6 @@ import Users from "./Pages/Admin/Users";
 import History from "./Pages/Admin/History";
 import Redeem from "./Pages/Admin/Redeem";
 
-//Providers
-import { AuthProvider } from "./context/AuthProvider";
-import { UsersProvider } from "./context/UsersProvider";
-import { HistoryProvider } from "./context/HistoryProvider";
-import { RewardsProvider } from "./context/RewardsProvider";
-
-//Admin-Pages
-import Profile from "./Pages/Admin/Profile";
-import Users from "./Pages/Admin/Users";
-import History from "./Pages/Admin/History";
-import Redeem from "./Pages/Admin/Redeem";
-
 function App() {
   return (
     <AuthProvider>
