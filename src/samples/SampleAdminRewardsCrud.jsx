@@ -11,6 +11,9 @@ function SampleAdminRewardsCrud() {
     pointsRequired: "",
     stocks: "",
     category: "",
+    validFrom: "",
+    validUntil: "",
+    status: "",
   });
 
   const [rewardsList, setRewardsList] = useState([]);
@@ -65,6 +68,9 @@ function SampleAdminRewardsCrud() {
           pointsRequired: reward.pointsRequired,
           stocks: reward.stocks,
           category: reward.category,
+          validFrom: reward.validFrom,
+          validUntil: reward.validUntil,
+          status: reward.status,
         });
         setRewardImageString(reward.image);
       } else {
@@ -93,6 +99,11 @@ function SampleAdminRewardsCrud() {
     formData.append("rewardName", rewardData.rewardName);
     formData.append("rewardDescription", rewardData.rewardDescription);
     formData.append("pointsRequired", rewardData.pointsRequired);
+
+    formData.append("validFrom", rewardData.validFrom);
+    formData.append("validUntil", rewardData.validUntil);
+    formData.append("status", rewardData.status);
+
     formData.append("stocks", rewardData.stocks);
     formData.append("category", rewardData.category);
     formData.append("image", rewardImage);
@@ -127,11 +138,23 @@ function SampleAdminRewardsCrud() {
       pointsRequired: "",
       stocks: "",
       category: "",
+      validFrom: "",
+      validUntil: "",
+      status: "",
     });
     setRewardImage(null);
     setRewardImageString("");
     document.getElementById("imageInput").value = null;
   };
+
+  function formatDate(isoDate) {
+    const date = new Date(isoDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
 
   return (
     <>
@@ -167,6 +190,39 @@ function SampleAdminRewardsCrud() {
               type="number"
               name="pointsRequired"
               value={rewardData.pointsRequired}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Valid From:
+            <input
+              required
+              type="date"
+              name="validFrom"
+              value={formatDate(rewardData.validFrom)}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Valid Until:
+            <input
+              required
+              type="date"
+              name="validUntil"
+              value={formatDate(rewardData.validUntil)}
+              onChange={handleChange}
+            />
+          </label>
+          <br />
+          <label>
+            Status:
+            <input
+              required
+              type="text"
+              name="status"
+              value={rewardData.status}
               onChange={handleChange}
             />
           </label>
@@ -223,6 +279,9 @@ function SampleAdminRewardsCrud() {
               <th>reward Name</th>
               <th>reward Description</th>
               <th>points Required</th>
+              <th>From</th>
+              <th>Until</th>
+              <th>Status</th>
               <th>stocks</th>
               <th>category</th>
               <th>image</th>
@@ -237,6 +296,9 @@ function SampleAdminRewardsCrud() {
                       <td>{item.rewardName}</td>
                       <td>{item.rewardDescription}</td>
                       <td>{item.pointsRequired}</td>
+                      <td>{formatDate(item.validFrom)}</td>
+                      <td>{formatDate(item.validUntil)}</td>
+                      <td>{item.status}</td>
                       <td>{item.stocks}</td>
                       <td>{item.category}</td>
                       <td>
