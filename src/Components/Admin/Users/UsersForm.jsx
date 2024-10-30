@@ -32,6 +32,7 @@ const UsersForm = ({ formType, onClose, data }) => {
   const [visibleModal, setVisibleModal] = useState(false);
   const [isError, setIsError] = useState(false);
   const [Loading, setLoading] = useState(false);
+  const [view, setView] = useState(false);
 
   const formatDate = (date) => {
     return date.toISOString().split("T")[0]; // Formats date to 'YYYY-MM-DD'
@@ -73,8 +74,10 @@ const UsersForm = ({ formType, onClose, data }) => {
     }
   };
 
+  console.log(formType);
+
   useEffect(() => {
-    if (formType === "edit") {
+    if (formType === "edit" || formType === "view") {
       setFirstName(data.personalInfo.firstName);
       setMiddleName(data.personalInfo.middleName);
       setLastName(data.personalInfo.lastName);
@@ -97,6 +100,9 @@ const UsersForm = ({ formType, onClose, data }) => {
       setEmail(data.credentials.email);
       setPassword(data.credentials.password);
       setLevel(data.credentials.level);
+
+      //view state
+      setView(true);
     }
   }, []);
 
@@ -209,7 +215,11 @@ const UsersForm = ({ formType, onClose, data }) => {
                 <p className="text-xs font-normal">{`Users > ${
                   formType === "add"
                     ? "Add User"
-                    : `Edit User > ${data.personalInfo.firstName} ${data.personalInfo.lastName}`
+                    : formType === "edit"
+                    ? `Edit User > ${data.personalInfo.firstName} ${data.personalInfo.lastName}`
+                    : formType === "view"
+                    ? `View User > ${data.personalInfo.firstName} ${data.personalInfo.lastName}`
+                    : null
                 }`}</p>
               </div>
               <div className="flex flex-row items-center justify-center space-x-2">
@@ -219,18 +229,20 @@ const UsersForm = ({ formType, onClose, data }) => {
                 >
                   <RiCloseLine size={16} color="black" />
                 </div>
-                <div
-                  className="flex items-center justify-center p-2 rounded-full bg-[#EDEDED] cursor-pointer"
-                  onClick={
-                    formType === "add"
-                      ? registerUser
-                      : formType === "edit"
-                      ? updateUser
-                      : null
-                  }
-                >
-                  <RiCheckLine size={16} color="black" />
-                </div>
+                {!view ? (
+                  <div
+                    className="flex items-center justify-center p-2 rounded-full bg-[#EDEDED] cursor-pointer"
+                    onClick={
+                      formType === "add"
+                        ? registerUser
+                        : formType === "edit"
+                        ? updateUser
+                        : null
+                    }
+                  >
+                    <RiCheckLine size={16} color="black" />
+                  </div>
+                ) : null}
               </div>
             </div>
             {/* Personal Information */}
@@ -253,6 +265,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="first name"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
+                  disabled={view ? true : false}
                 />
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -265,6 +278,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="middle name"
                   value={middleName}
                   onChange={(e) => setMiddleName(e.target.value)}
+                  disabled={view ? true : false}
                 />
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -277,6 +291,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="last name"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
+                  disabled={view ? true : false}
                 />
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -289,6 +304,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="date of birth"
                   value={formattedBirthDate}
                   onChange={onDateChange}
+                  disabled={view ? true : false}
                 />
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -297,12 +313,14 @@ const UsersForm = ({ formType, onClose, data }) => {
                 </div>
                 <div className="w-1/2 flex flex-row items-center justify-between px-4 py-3 rounded-xl bg-[#EDEDED]">
                   <p className="text-xs font-normal">{gender}</p>
-                  <RiRefreshLine
-                    size={16}
-                    color="black"
-                    className="cursor-pointer"
-                    onClick={handleGenderToggle}
-                  />
+                  {formType !== "view" && (
+                    <RiRefreshLine
+                      size={16}
+                      color="black"
+                      className="cursor-pointer"
+                      onClick={handleGenderToggle}
+                    />
+                  )}
                 </div>
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -311,12 +329,14 @@ const UsersForm = ({ formType, onClose, data }) => {
                 </div>
                 <div className="w-1/2 flex flex-row items-center justify-between px-4 py-3 rounded-xl bg-[#EDEDED]">
                   <p className="text-xs font-normal">{civilStatus}</p>
-                  <RiRefreshLine
-                    size={16}
-                    color="black"
-                    className="cursor-pointer"
-                    onClick={handleStatusToggle}
-                  />
+                  {formType !== "view" && (
+                    <RiRefreshLine
+                      size={16}
+                      color="black"
+                      className="cursor-pointer"
+                      onClick={handleStatusToggle}
+                    />
+                  )}
                 </div>
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -329,6 +349,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="nationality"
                   value={nationality}
                   onChange={(e) => setNationality(e.target.value)}
+                  disabled={view ? true : false}
                 />
               </div>
             </div>
@@ -352,6 +373,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="house number"
                   value={houseNumber}
                   onChange={(e) => setHouseNumber(e.target.value)}
+                  disabled={view ? true : false}
                 />
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -364,6 +386,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="street"
                   value={street}
                   onChange={(e) => setStreet(e.target.value)}
+                  disabled={view ? true : false}
                 />
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -388,6 +411,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="city"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
+                  disabled={view ? true : false}
                 />
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -407,6 +431,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                       setNumber(value);
                     }
                   }}
+                  disabled={view ? true : false}
                 />
               </div>
             </div>
@@ -430,6 +455,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="employment status"
                   value={employmentStatus}
                   onChange={(e) => setEmploymentStatus(e.target.value)}
+                  disabled={view ? true : false}
                 />
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -442,6 +468,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="occupation"
                   value={occupation}
                   onChange={(e) => setOccupation(e.target.value)}
+                  disabled={view ? true : false}
                 />
               </div>
             </div>
@@ -465,6 +492,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  disabled={view ? true : false}
                 />
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -477,6 +505,7 @@ const UsersForm = ({ formType, onClose, data }) => {
                   placeholder="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={view ? true : false}
                 />
               </div>
               <div className="w-full flex flex-row items-center justify-between">
@@ -485,12 +514,14 @@ const UsersForm = ({ formType, onClose, data }) => {
                 </div>
                 <div className="w-1/2 flex flex-row items-center justify-between px-4 py-3 rounded-xl bg-[#EDEDED]">
                   <p className="text-xs font-normal">{level}</p>
-                  <RiRefreshLine
-                    size={16}
-                    color="black"
-                    className="cursor-pointer"
-                    onClick={handleLevelToggle}
-                  />
+                  {formType !== "view" && (
+                    <RiRefreshLine
+                      size={16}
+                      color="black"
+                      className="cursor-pointer"
+                      onClick={handleLevelToggle}
+                    />
+                  )}
                 </div>
               </div>
             </div>

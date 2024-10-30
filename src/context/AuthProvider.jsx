@@ -14,10 +14,15 @@ export const AuthProvider = ({ children }) => {
     const storedUser = localStorage.getItem("user");
 
     if (storedToken && storedUser) {
+      const parsedUser = JSON.parse(storedUser);
       setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      setUser(parsedUser);
       setIsAuthenticated(true);
-      navigate("/admin/dashboard");
+      if (parsedUser.credentials.level === "admin") {
+        navigate("/admin/dashboard");
+      } else if (parsedUser.credentials.level === "staff") {
+        navigate("/staff/dashboard");
+      }
     } else {
       if (!isAuthenticated) {
         navigate("/");

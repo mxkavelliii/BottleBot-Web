@@ -1,13 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { RiArrowRightSLine, RiCheckLine, RiCloseLine } from "react-icons/ri";
-import { useUsers } from "../../../context/UsersProvider";
+import {
+  RiArrowRightSLine,
+  RiCalendarEventLine,
+  RiCheckLine,
+  RiCloseLine,
+  RiDeleteBin4Line,
+  RiEdit2Line,
+  RiShoppingBagLine,
+  RiUserSmileLine,
+} from "react-icons/ri";
+import { useRewards } from "../../../context/RewardsProvider";
 import axios from "axios";
+import { useUsers } from "../../../context/UsersProvider";
 import Image from "../../../assets/Man.jpg";
 import PopupModal from "../../PopupModal";
+import PointsHistoryForm from "./PointsHistoryForm";
 
-const CheckoutForm = ({ onClose, data }) => {
+const ChooseUserPoints = ({ onClose, formType, data, reward }) => {
   const [userPoints, setUserPoints] = useState({});
   const { users, setUsers, roles, getUsers, filterUsers } = useUsers();
+  const [showForm, setShowForm] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   //functions
   const [loading, setLoading] = useState(false);
@@ -73,30 +86,6 @@ const CheckoutForm = ({ onClose, data }) => {
     return userPoints[userId] !== undefined ? userPoints[userId] : 0;
   };
 
-  const redeemItem = async (userId) => {
-    if (userId) {
-      try {
-        const response = await axios.post(
-          `http://localhost:8080/api/history/claim`,
-          {
-            userId: userId,
-            rewardId: data._id,
-          }
-        );
-
-        if (response.status === 200) {
-          setMessage(response.data.message);
-          setVisibleModal(true);
-        } else {
-          setMessage(response.data.message);
-        }
-      } catch (error) {
-        setIsError(true);
-        setMessage(error.response.data.message);
-      }
-    }
-  };
-
   return (
     <>
       <div className="fixed top-0 left-0 w-full h-[100svh] flex items-center justify-center overflow-hidden bg-[#050301]/50 z-10 font-dm">
@@ -105,7 +94,13 @@ const CheckoutForm = ({ onClose, data }) => {
             {/* header */}
             <div className="w-full flex flex-row items-center justify-between pb-6">
               <div className="flex flex-row items-center justify-start w-2/3">
-                <p className="text-xs font-normal truncate">{`Redeem > Checkout: ${data.rewardName} > Choose User`}</p>
+                <p className="text-xs font-normal truncate">{`History > ${
+                  formType === "add"
+                    ? "Add History"
+                    : formType === "edit"
+                    ? `Edit History > #${data._id.toUpperCase()}`
+                    : null
+                }`}</p>
               </div>
               <div className="flex flex-row items-center justify-center space-x-2">
                 <div
@@ -113,9 +108,6 @@ const CheckoutForm = ({ onClose, data }) => {
                   onClick={onClose}
                 >
                   <RiCloseLine size={16} color="black" />
-                </div>
-                <div className="flex items-center justify-center p-2 rounded-full bg-[#EDEDED] cursor-pointer">
-                  <RiCheckLine size={16} color="black" />
                 </div>
               </div>
             </div>
@@ -139,7 +131,7 @@ const CheckoutForm = ({ onClose, data }) => {
                         <img src={Image} alt="/" />
                       </div>
                       <div className="w-2/3 flex flex-col items-start justify-center">
-                        <p className="text-xs font-semibold w-full truncate">{`${user.personalInfo.firstName} ${user.personalInfo.lastName} `}</p>
+                        <p className="text-xs font-semibold w-full truncate">{`${user.personalInfo.firstName} ${user.personalInfo.lastName}`}</p>
                         <p className="text-xs font-normal uppercase text-[#6E6E6E] w-full truncate">
                           {`${getUserPoints(user._id)} ${
                             getUserPoints(user._id) > 1 ? "pts." : "pt."
@@ -149,7 +141,10 @@ const CheckoutForm = ({ onClose, data }) => {
                     </div>
                     <div
                       className="p-2 rounded-full cursor-pointer bg-gradient-to-tr from-[#466600] to-[#699900]"
-                      onClick={() => redeemItem(user._id)}
+                      onClick={() => {
+                        setSelectedUser(user);
+                        setShowForm(true);
+                      }}
                     >
                       <RiArrowRightSLine size={16} color="white" />
                     </div>
@@ -160,6 +155,17 @@ const CheckoutForm = ({ onClose, data }) => {
           </div>
         </div>
       </div>
+      {showForm && (
+        <PointsHistoryForm
+          onClose={() => {
+            setShowForm(false);
+            onClose();
+          }}
+          data={data}
+          user={selectedUser}
+          formType={formType}
+        />
+      )}
       {visibleModal && (
         <PopupModal
           icon="redeem"
@@ -177,4 +183,4 @@ const CheckoutForm = ({ onClose, data }) => {
   );
 };
 
-export default CheckoutForm;
+export default ChooseUserPoints;

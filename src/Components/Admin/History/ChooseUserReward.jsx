@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { RiArrowRightSLine, RiCheckLine, RiCloseLine } from "react-icons/ri";
-import { useUsers } from "../../../context/UsersProvider";
+import {
+  RiArrowRightSLine,
+  RiCalendarEventLine,
+  RiCheckLine,
+  RiCloseLine,
+  RiDeleteBin4Line,
+  RiEdit2Line,
+  RiShoppingBagLine,
+  RiUserSmileLine,
+} from "react-icons/ri";
+import { useRewards } from "../../../context/RewardsProvider";
 import axios from "axios";
+import { useUsers } from "../../../context/UsersProvider";
 import Image from "../../../assets/Man.jpg";
 import PopupModal from "../../PopupModal";
 
-const CheckoutForm = ({ onClose, data }) => {
+const ChooseUserReward = ({ onClose, formType, data, reward }) => {
   const [userPoints, setUserPoints] = useState({});
   const { users, setUsers, roles, getUsers, filterUsers } = useUsers();
 
@@ -80,7 +90,7 @@ const CheckoutForm = ({ onClose, data }) => {
           `http://localhost:8080/api/history/claim`,
           {
             userId: userId,
-            rewardId: data._id,
+            rewardId: reward._id,
           }
         );
 
@@ -97,6 +107,31 @@ const CheckoutForm = ({ onClose, data }) => {
     }
   };
 
+  const updateRewardHistory = async (userId) => {
+    setLoading(true);
+    try {
+      let url = `http://localhost:8080/api/history/claim/${data._id}`;
+
+      let response = await axios.put(url, {
+        userId: userId,
+        rewardId: reward._id,
+        pointsSpent: reward.pointsRequired,
+      });
+
+      if (response.status === 200) {
+        setMessage(response.data.message);
+        setVisibleModal(true);
+        setIsError(false);
+      }
+    } catch (error) {
+      setVisibleModal(true);
+      setMessage(error.response.data.message);
+      setIsError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="fixed top-0 left-0 w-full h-[100svh] flex items-center justify-center overflow-hidden bg-[#050301]/50 z-10 font-dm">
@@ -105,7 +140,13 @@ const CheckoutForm = ({ onClose, data }) => {
             {/* header */}
             <div className="w-full flex flex-row items-center justify-between pb-6">
               <div className="flex flex-row items-center justify-start w-2/3">
-                <p className="text-xs font-normal truncate">{`Redeem > Checkout: ${data.rewardName} > Choose User`}</p>
+                <p className="text-xs font-normal truncate">{`History > ${
+                  formType === "add"
+                    ? "Add History > Choose User"
+                    : formType === "edit"
+                    ? `Edit History > #${data._id.toUpperCase()} > Choose User`
+                    : null
+                }`}</p>
               </div>
               <div className="flex flex-row items-center justify-center space-x-2">
                 <div
@@ -113,9 +154,6 @@ const CheckoutForm = ({ onClose, data }) => {
                   onClick={onClose}
                 >
                   <RiCloseLine size={16} color="black" />
-                </div>
-                <div className="flex items-center justify-center p-2 rounded-full bg-[#EDEDED] cursor-pointer">
-                  <RiCheckLine size={16} color="black" />
                 </div>
               </div>
             </div>
@@ -149,7 +187,13 @@ const CheckoutForm = ({ onClose, data }) => {
                     </div>
                     <div
                       className="p-2 rounded-full cursor-pointer bg-gradient-to-tr from-[#466600] to-[#699900]"
-                      onClick={() => redeemItem(user._id)}
+                      onClick={() => {
+                        formType === "add"
+                          ? redeemItem(user._id)
+                          : formType === "edit"
+                          ? updateRewardHistory(user._id)
+                          : null;
+                      }}
                     >
                       <RiArrowRightSLine size={16} color="white" />
                     </div>
@@ -177,4 +221,4 @@ const CheckoutForm = ({ onClose, data }) => {
   );
 };
 
-export default CheckoutForm;
+export default ChooseUserReward;
