@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./context/ProtectedRoute";
 // ? FOR TESTING PURPOSES ONLY
 import SampleAdminRewardsCrud from "./samples/SampleAdminRewardsCrud";
+import Monitor from "./samples/Monitor";
 
 //Providers
 import { AuthProvider } from "./context/AuthProvider";
